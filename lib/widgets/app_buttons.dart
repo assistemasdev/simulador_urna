@@ -65,17 +65,19 @@ class Button extends StatelessWidget {
       child: ButtonTheme(
         minWidth: minWidth,
         height: height,
-        child: RaisedButton(
-          shape:
-              RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
-          elevation: 15,
+        child: TextButton(
+
+          //FIXME: Ajustar estilos
+          // shape:
+          //     RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+          // elevation: 15,
           onPressed: () => cb(text),
           child: Text(
             text,
             style: TextStyle(fontSize: fontSize),
           ),
-          textColor: this.textColor,
-          color: this.color,
+          // textColor: this.textColor,
+          // color: this.color,
         ),
       ),
     );

@@ -40,14 +40,15 @@ class _DashboardState extends State<Dashboard> {
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                FlatButton.icon(
+                TextButton.icon(
                   icon: Icon(Icons.share),
-                  color: Colors.blue,
-                  textColor: Colors.white,
-                  disabledColor: Colors.grey,
-                  disabledTextColor: Colors.black,
-                  padding: EdgeInsets.all(8.0),
-                  splashColor: Colors.blueAccent,
+                  //FIXME: Ajuster estilos
+                  // color: Colors.blue,
+                  // textColor: Colors.white,
+                  // disabledColor: Colors.grey,
+                  // disabledTextColor: Colors.black,
+                  // padding: EdgeInsets.all(8.0),
+                  // splashColor: Colors.blueAccent,
                   onPressed: () {
                     print('press');
                     _shareCSV();
@@ -61,14 +62,15 @@ class _DashboardState extends State<Dashboard> {
                 SizedBox(
                   width: 40,
                 ),
-                FlatButton.icon(
+                TextButton.icon(
                   icon: Icon(Icons.delete_forever),
-                  color: Colors.red,
-                  textColor: Colors.white,
-                  disabledColor: Colors.grey,
-                  disabledTextColor: Colors.black,
-                  padding: EdgeInsets.all(8.0),
-                  splashColor: Colors.blueAccent,
+                  //FIXME: Ajuster estilos
+                  // color: Colors.red,
+                  // textColor: Colors.white,
+                  // disabledColor: Colors.grey,
+                  // disabledTextColor: Colors.black,
+                  // padding: EdgeInsets.all(8.0),
+                  // splashColor: Colors.blueAccent,
                   onPressed: () => _onClickDialog(context),
                   label: Text(
                     "Deletar pesquisa",
@@ -95,12 +97,12 @@ class _DashboardState extends State<Dashboard> {
           return AlertDialog(
             title: Text("Tem certeza que deseja apagar toda a pesquisa?"),
             actions: <Widget>[
-              FlatButton(
+              TextButton(
                   onPressed: () => Navigator.pop(context),
                   child: Text("Cancelar")),
-              FlatButton(
+              TextButton(
                   onPressed: () {
-b                    print('delete');
+                    print('delete');
                     helper.deleteQuery();
                     helper.deleteFile();
                     _onClickLogout(context);
