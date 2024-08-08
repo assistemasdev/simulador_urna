@@ -1,0 +1,20 @@
+[
+    {
+        "numero": "55901",
+        "nome": "João Saldanha",
+        "partido": "PSD",
+        "imagePath": "assets/images/vereador/saldanha.jpg"
+    },
+    {
+        "numero": "13001",
+        "nome": "Carlos Arthur",
+        "partido": "PT",
+        "imagePath": "assets/images/vereador/pt.jpg"
+    },
+    {
+        "numero": "45001",
+        "nome": "Paulo Avelino",
+        "partido": "PSDB",
+        "imagePath": "assets/images/vereador/tucano.jpg"
+    }
+]

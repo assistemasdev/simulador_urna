@@ -1,0 +1,23 @@
+[
+    {
+        "numero": "55",
+        "nome": "Naumi Amorim",
+        "partido": "PSD",
+        "imagePath": "assets/images/prefeito/naumir.jpg",
+        "imagePathVice": "assets/images/prefeito/vice.jpg"
+    },
+    {
+        "numero": "13",
+        "nome": "Candidato do PT",
+        "partido": "PT",
+        "imagePath": "assets/images/prefeito/pt.jpg",
+        "imagePathVice": "assets/images/prefeito/pt.jpg"
+    },
+    {
+        "numero": "45",
+        "nome": "Candidato do PSDB",
+        "partido": "PSDB",
+        "imagePath": "assets/images/prefeito/tucano.jpg",
+        "imagePathVice": "assets/images/prefeito/tucano.jpg"
+    }
+]
