@@ -5,14 +5,15 @@ import 'package:urna_eletronica/pages/home_page.dart';
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
-  SystemChrome.setPreferredOrientations([DeviceOrientation.landscapeRight])
-      .then((_) {
+  SystemChrome.setPreferredOrientations([
+    DeviceOrientation.landscapeLeft,   // paisagem normal
+    DeviceOrientation.landscapeRight,  // paisagem invertida (180°)
+  ]).then((_) {
     runApp(new MyApp());
   });
 }
 
 class MyApp extends StatelessWidget {
-  // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
     return MaterialApp(

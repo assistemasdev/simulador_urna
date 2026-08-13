@@ -66,9 +66,16 @@ flutter:
     - assets/images/prefeito/vice.jpg
     - assets/images/prefeito/pt.jpg
     - assets/images/prefeito/tucano.jpg
+    - assets/images/eleicoes2026/
 
     - assets/json/vereador.json
     - assets/json/prefeito.json
+    - assets/json/prefeito.json
+    - assets/json/deputado_federal.json
+    - assets/json/deputado_estadual.json
+    - assets/json/senador.json
+    - assets/json/governador.json
+    - assets/csv/candidatos.csv
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware.

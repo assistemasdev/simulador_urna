@@ -1,0 +1,9 @@
+[
+  {
+    "numero": "12",
+    "nome": "Nome do Candidato",
+    "partido": "PART",
+    "imagePath": "assets/images/candidato.jpg",
+    "imagePathVice": "assets/images/vice.jpg"
+  }
+]

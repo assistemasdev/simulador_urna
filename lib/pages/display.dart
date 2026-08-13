@@ -3,13 +3,19 @@ import 'package:flutter/material.dart';
 
 class Display extends StatelessWidget {
   final String text;
-  final int bufferIndex;
-  final List buffer;
-  List vereadorId;
-  List prefeitoId;
+  final int currentCargoIndex;
+  final List candidatoId;
+  final String cargoNome;
+  final int digitos;
 
-  Display(this.text, this.bufferIndex, this.buffer, this.vereadorId,
-      this.prefeitoId);
+  Display(this.text, this.currentCargoIndex, this.candidatoId, this.cargoNome,
+      this.digitos);
+
+  // ===== TAMANHOS DAS IMAGENS (ajuste aqui se quiser) =====
+  static const double IMG_TITULAR_W = 250; // antes: 300
+  static const double IMG_TITULAR_H = 300; // antes: 350
+  static const double IMG_VICE_W = 150;    // antes: 200
+  static const double IMG_VICE_H = 150;    // antes: 200
 
   @override
   Widget build(BuildContext context) {
@@ -22,51 +28,98 @@ class Display extends StatelessWidget {
         children: <Widget>[
           Container(
             color: Colors.grey[300],
-            child: bufferIndex == 0 && buffer[0] == 'BRANCO'
-                ? blankcolumn()
-                : buffer[1] == 'BRANCO' ? blankcolumn() : normalcolumn(),
+            child: text == 'BRANCO' ? blankcolumn() : normalcolumn(),
           ),
-          vereadorId.isNotEmpty
+          // Imagem principal do candidato (menor, sem cobrir os textos)
+          candidatoId.length >= 4
               ? Positioned(
                   top: 60,
                   right: 0,
                   child: Image.asset(
-                    vereadorId[3],
-                    height: 350,
-                    width: 300,
+                    candidatoId[3],
+                    height: IMG_TITULAR_H,
+                    width: IMG_TITULAR_W,
                     fit: BoxFit.cover,
+                    errorBuilder: (context, error, stackTrace) {
+                      return Container(
+                        height: IMG_TITULAR_H,
+                        width: IMG_TITULAR_W,
+                        color: Colors.grey[400],
+                        child: Icon(Icons.person, size: 100, color: Colors.white),
+                      );
+                    },
                   ))
-              : prefeitoId.isNotEmpty
-                  ? Positioned(
-                      top: 60,
-                      right: 0,
-                      child: Image.asset(
-                        prefeitoId[3],
-                        height: 350,
-                        width: 300,
-                        fit: BoxFit.cover,
-                      ))
-                  : SizedBox(),
-          prefeitoId.isNotEmpty
+              : SizedBox(),
+          // Vice: imagem + nome embaixo (menor)
+          candidatoId.length >= 5
               ? Positioned(
                   bottom: 30,
                   right: 0,
-                  child: Image.asset(
-                    prefeitoId[4],
-                    height: 240,
-                    width: 200,
-                    fit: BoxFit.cover,
-                  ))
+                  child: Column(
+                    children: [
+                      Image.asset(
+                        candidatoId[4],
+                        height: IMG_VICE_H,
+                        width: IMG_VICE_W,
+                        fit: BoxFit.cover,
+                        errorBuilder: (context, error, stackTrace) {
+                          return Container(
+                            height: IMG_VICE_H,
+                            width: IMG_VICE_W,
+                            color: Colors.grey[400],
+                            child: Icon(Icons.person, size: 60, color: Colors.white),
+                          );
+                        },
+                      ),
+                      if (candidatoId.length >= 6)
+                        Container(
+                          width: IMG_VICE_W,
+                          color: Colors.white,
+                          padding: EdgeInsets.symmetric(vertical: 6, horizontal: 4),
+                          child: Text(
+                            candidatoId[5],
+                            textAlign: TextAlign.center,
+                            style: TextStyle(
+                              fontSize: 16,
+                              fontWeight: FontWeight.bold,
+                            ),
+                            maxLines: 2,
+                            overflow: TextOverflow.ellipsis,
+                          ),
+                        ),
+                    ],
+                  ),
+                )
               : SizedBox(),
         ],
       ),
     );
   }
 
+  Row _digitBoxes() {
+    return Row(
+      children: List.generate(digitos, (i) {
+        String digit = (i < text.length) ? text[i] : '';
+        return Container(
+          width: 60,
+          height: 80,
+          margin: EdgeInsets.only(right: 6),
+          color: Colors.white,
+          child: Center(
+            child: Text(
+              digit,
+              style: TextStyle(fontSize: 50, letterSpacing: 1.2),
+            ),
+          ),
+        );
+      }),
+    );
+  }
+
   Column blankcolumn() {
     return Column(
       children: <Widget>[
-        buffer.isNotEmpty
+        text.isNotEmpty
             ? _title()
             : SizedBox(
                 height: 20,
@@ -78,11 +131,11 @@ class Display extends StatelessWidget {
         SizedBox(
           height: 80,
         ),
-        buffer.isNotEmpty ? _blanckVoteAnimation() : SizedBox(),
+        text.isNotEmpty ? _blanckVoteAnimation() : SizedBox(),
         SizedBox(
           height: 130,
         ),
-        buffer.isNotEmpty ? _footer() : SizedBox()
+        text.isNotEmpty ? _footer() : SizedBox()
       ],
     );
   }
@@ -90,7 +143,7 @@ class Display extends StatelessWidget {
   Column normalcolumn() {
     return Column(
       children: <Widget>[
-        text.length >= 2
+        text.isNotEmpty
             ? _title()
             : SizedBox(
                 height: 20,
@@ -113,58 +166,45 @@ class Display extends StatelessWidget {
   Padding _nullVoteAnimation() {
     return Padding(
       padding: const EdgeInsets.fromLTRB(8, 30, 0, 0),
-      child: vereadorId.isNotEmpty
-          ? Row(
-              mainAxisAlignment: MainAxisAlignment.start,
-              children: <Widget>[
-                Text(
-                  'Partido:',
-                  style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
-                ),
-                SizedBox(
-                  width: 78,
-                ),
-                Text(
-                  vereadorId[2],
-                  style: TextStyle(fontSize: 35),
-                )
-              ],
-            )
-          : prefeitoId.isNotEmpty
-              ? Row(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  children: <Widget>[
-                    Text(
-                      'Partido:',
-                      style:
-                          TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
-                    ),
-                    SizedBox(
-                      width: 78,
-                    ),
-                    Text(
-                      prefeitoId[2],
+      child: candidatoId.isNotEmpty
+          ? Padding(
+              // reserva espaço da foto pra o partido não passar por baixo
+              padding: EdgeInsets.only(right: IMG_TITULAR_W + 10),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.start,
+                children: <Widget>[
+                  Text(
+                    'Partido:',
+                    style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                  ),
+                  SizedBox(
+                    width: 78,
+                  ),
+                  Flexible(
+                    child: Text(
+                      candidatoId[2],
                       style: TextStyle(fontSize: 35),
-                    )
-                  ],
-                )
-              : Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: <Widget>[
-                    FadeAnimatedTextKit(
-                        onTap: () {
-                          print("Tap Event");
-                        },
-                        repeatForever: true,
-                        text: ["VOTO NULO", "VOTO NULO"],
-                        textStyle: TextStyle(
-                            fontSize: 50.0, fontWeight: FontWeight.bold),
-                        textAlign: TextAlign.start,
-                        alignment: AlignmentDirectional
-                            .topStart // or Alignment.topLeft
-                        ),
-                  ],
-                ),
+                      overflow: TextOverflow.ellipsis,
+                    ),
+                  )
+                ],
+              ),
+            )
+          : Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: <Widget>[
+                FadeAnimatedTextKit(
+                    onTap: () {
+                      print("Tap Event");
+                    },
+                    repeatForever: true,
+                    text: ["VOTO NULO", "VOTO NULO"],
+                    textStyle: TextStyle(
+                        fontSize: 50.0, fontWeight: FontWeight.bold),
+                    textAlign: TextAlign.start,
+                    alignment: AlignmentDirectional.topStart),
+              ],
+            ),
     );
   }
 
@@ -182,8 +222,7 @@ class Display extends StatelessWidget {
               text: ["VOTO EM BRANCO", "VOTO EM BRANCO"],
               textStyle: TextStyle(fontSize: 60.0, fontWeight: FontWeight.bold),
               textAlign: TextAlign.start,
-              alignment: AlignmentDirectional.topStart // or Alignment.topLeft
-              ),
+              alignment: AlignmentDirectional.topStart),
         ],
       ),
     );
@@ -192,115 +231,63 @@ class Display extends StatelessWidget {
   Padding _numErrorTitle() {
     return Padding(
       padding: const EdgeInsets.fromLTRB(8, 30, 0, 0),
-      child: vereadorId.isNotEmpty
-          ? Row(
+      child: candidatoId.isNotEmpty
+          ? Padding(
+              // reserva espaço da foto pra o nome não passar por baixo
+              padding: EdgeInsets.only(right: IMG_TITULAR_W + 10),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.start,
+                children: <Widget>[
+                  Text(
+                    'Nome:',
+                    style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                  ),
+                  SizedBox(
+                    width: 88,
+                  ),
+                  Flexible(
+                    child: Text(
+                      candidatoId[1],
+                      style: TextStyle(fontSize: 35),
+                      overflow: TextOverflow.ellipsis,
+                    ),
+                  )
+                ],
+              ),
+            )
+          : Row(
               mainAxisAlignment: MainAxisAlignment.start,
               children: <Widget>[
                 Text(
-                  'Nome:',
-                  style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
-                ),
-                SizedBox(
-                  width: 88,
-                ),
-                Text(
-                  vereadorId[1],
+                  'NÚMERO ERRADO',
                   style: TextStyle(fontSize: 35),
                 )
               ],
-            )
-          : prefeitoId.isNotEmpty
-              ? Row(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  children: <Widget>[
-                    Text(
-                      'Nome:',
-                      style:
-                          TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
-                    ),
-                    SizedBox(
-                      width: 88,
-                    ),
-                    Text(
-                      prefeitoId[1],
-                      style: TextStyle(fontSize: 35),
-                    )
-                  ],
-                )
-              : Row(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  children: <Widget>[
-                    Text(
-                      'NÚMERO ERRADO',
-                      style: TextStyle(fontSize: 35),
-                    )
-                  ],
-                ),
+            ),
     );
   }
 
   Padding _boxVoteStatic() {
     return Padding(
       padding: const EdgeInsets.fromLTRB(160, 0, 0, 0),
-      child: Stack(
-        children: [
-          bufferIndex == 0
-              ? Image.asset(
-                  'assets/images/vereador.png',
-                  width: 150,
-                  height: 60,
-                )
-              : Image.asset(
-                  'assets/images/prefeito.png',
-                  width: 60,
-                  height: 60,
-                ),
-          Row(mainAxisAlignment: MainAxisAlignment.start, children: <Widget>[
-            Text(
-              text,
-              style: TextStyle(fontSize: 50, letterSpacing: 1.2),
-            )
-          ])
-        ],
-      ),
+      child: _digitBoxes(),
     );
   }
 
   Padding _boxVoteMutable() {
     return Padding(
       padding: const EdgeInsets.fromLTRB(8, 0, 0, 0),
-      child: Stack(
-        children: [
-          bufferIndex == 0
-              ? Padding(
-                  padding: const EdgeInsets.fromLTRB(152, 0, 0, 0),
-                  child: Image.asset(
-                    'assets/images/vereador.png',
-                    width: 150,
-                    height: 60,
-                  ),
-                )
-              : Padding(
-                  padding: const EdgeInsets.fromLTRB(152, 0, 0, 0),
-                  child: Image.asset(
-                    'assets/images/prefeito.png',
-                    width: 60,
-                    height: 60,
-                  ),
-                ),
-          Row(mainAxisAlignment: MainAxisAlignment.start, children: <Widget>[
-            Text(
-              "Número:",
-              style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
-            ),
-            Padding(
-              padding: const EdgeInsets.fromLTRB(75, 0, 0, 0),
-              child: Text(
-                text,
-                style: TextStyle(fontSize: 50, letterSpacing: 1.2),
-              ),
-            )
-          ])
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.start,
+        children: <Widget>[
+          Text(
+            "Número:",
+            style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+          ),
+          SizedBox(
+            width: 20,
+          ),
+          _digitBoxes(),
         ],
       ),
     );
@@ -310,15 +297,10 @@ class Display extends StatelessWidget {
     return Padding(
       padding: const EdgeInsets.fromLTRB(160, 0, 0, 0),
       child: Row(mainAxisAlignment: MainAxisAlignment.start, children: <Widget>[
-        bufferIndex == 0
-            ? Text(
-                'Vereador',
-                style: TextStyle(fontSize: 40),
-              )
-            : Text(
-                'Prefeito',
-                style: TextStyle(fontSize: 40),
-              )
+        Text(
+          cargoNome,
+          style: TextStyle(fontSize: 40),
+        )
       ]),
     );
   }
@@ -339,6 +321,8 @@ class Display extends StatelessWidget {
   }
 
   Expanded _footer() {
+    // se tem vice (governador), reserva espaço à direita pra não sobrepor
+    final double rightPad = candidatoId.length >= 5 ? IMG_VICE_W + 10 : 0;
     return Expanded(
       child: Column(
         children: <Widget>[
@@ -347,7 +331,7 @@ class Display extends StatelessWidget {
             padding: const EdgeInsets.fromLTRB(8, 30, 0, 20),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.start,
-              children: <Widget>[
+              children: [
                 (Text(
                   'Aperte a tecla:',
                   style: TextStyle(fontSize: 25, fontWeight: FontWeight.bold),
@@ -355,54 +339,34 @@ class Display extends StatelessWidget {
               ],
             ),
           ),
-          prefeitoId.isNotEmpty
-              ? Padding(
-                  padding: const EdgeInsets.fromLTRB(120, 0, 0, 0),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    children: <Widget>[
-                      (Text(
-                        'VERDE para CONFIRMAR este voto',
-                        style: TextStyle(
-                            fontSize: 25, fontWeight: FontWeight.bold),
-                      ))
-                    ],
+          Padding(
+            padding: EdgeInsets.fromLTRB(120, 0, rightPad, 0),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.start,
+              children: [
+                Flexible(
+                  child: Text(
+                    'VERDE para CONFIRMAR este voto',
+                    style: TextStyle(fontSize: 25, fontWeight: FontWeight.bold),
                   ),
                 )
-              : Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: <Widget>[
-                    (Text(
-                      'VERDE para CONFIRMAR este voto',
-                      style:
-                          TextStyle(fontSize: 25, fontWeight: FontWeight.bold),
-                    ))
-                  ],
-                ),
-          prefeitoId.isNotEmpty
-              ? Padding(
-                  padding: const EdgeInsets.fromLTRB(120, 0, 0, 0),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    children: <Widget>[
-                      (Text(
-                        'LARANJA para REINICIAR este voto',
-                        style: TextStyle(
-                            fontSize: 25, fontWeight: FontWeight.bold),
-                      ))
-                    ],
+              ],
+            ),
+          ),
+          Padding(
+            padding: EdgeInsets.fromLTRB(120, 0, rightPad, 0),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.start,
+              children: [
+                Flexible(
+                  child: Text(
+                    'LARANJA para REINICIAR este voto',
+                    style: TextStyle(fontSize: 25, fontWeight: FontWeight.bold),
                   ),
                 )
-              : Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: <Widget>[
-                    (Text(
-                      'LARANJA para REINICIAR este voto',
-                      style:
-                          TextStyle(fontSize: 25, fontWeight: FontWeight.bold),
-                    ))
-                  ],
-                ),
+              ],
+            ),
+          ),
         ],
       ),
     );

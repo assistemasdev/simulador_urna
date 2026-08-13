@@ -1,83 +1,74 @@
 import 'package:flutter/material.dart';
 
 class Button extends StatelessWidget {
-  static const DEFAULT = Colors.black;
-  static const NUM = Colors.white;
-  static const NUMOP = Colors.black;
-  static const ACTION = Colors.black;
-  static const WHITE = Colors.white;
-  static const ORANGE = Colors.deepOrange;
-  static const GREEN = Colors.green;
+  static const Color COR_NUMERO = Color(0xFFEFEFEF);
+  static const Color COR_BRANCO = Colors.white;
+  static const Color COR_CORRIGE = Color(0xFFFF6C00);
+  static const Color COR_CONFIRMA = Color(0xFF00A859);
 
   final String text;
   final void Function(String) cb;
-  final Color color;
+  final Color backgroundColor;
   final Color textColor;
   final double fontSize;
-  final double minWidth;
+  final double width;
   final double height;
-  final EdgeInsets padding;
 
-  Button(
-      {@required this.text,
-      @required this.cb,
-      this.color = DEFAULT,
-      this.textColor = NUM,
-      this.fontSize = 50,
-      this.minWidth = 110,
-      this.height = 90,
-      this.padding = const EdgeInsets.all(8.0)});
+  // Tecla numérica
+  Button({this.text, this.cb})
+      : backgroundColor = COR_NUMERO,
+        textColor = Colors.black,
+        fontSize = 32,
+        width = 74,
+        height = 64;
 
-  Button.white(
-      {@required this.text,
-      @required this.cb,
-      this.color = WHITE,
-      this.textColor = ACTION,
-      this.fontSize = 20,
-      this.minWidth = 110,
-      this.height = 70,
-      this.padding = const EdgeInsets.fromLTRB(8, 22, 8, 0)});
+  // BRANCO
+  Button.white({this.text, this.cb})
+      : backgroundColor = COR_BRANCO,
+        textColor = Colors.black,
+        fontSize = 14,
+        width = 118,
+        height = 54;
 
-  Button.orange(
-      {@required this.text,
-      @required this.cb,
-      this.color = ORANGE,
-      this.textColor = ACTION,
-      this.fontSize = 20,
-      this.minWidth = 110,
-      this.height = 70,
-      this.padding = const EdgeInsets.fromLTRB(8, 22, 8, 0)});
+  // CORRIGE
+  Button.orange({this.text, this.cb})
+      : backgroundColor = COR_CORRIGE,
+        textColor = Colors.white,
+        fontSize = 14,
+        width = 118,
+        height = 54;
 
-  Button.green(
-      {@required this.text,
-      @required this.cb,
-      this.color = GREEN,
-      this.textColor = ACTION,
-      this.fontSize = 20,
-      this.minWidth = 110,
-      this.height = 90,
-      this.padding = const EdgeInsets.all(8.0)});
+  // CONFIRMA
+  Button.green({this.text, this.cb})
+      : backgroundColor = COR_CONFIRMA,
+        textColor = Colors.white,
+        fontSize = 14,
+        width = 118,
+        height = 54;
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: this.padding,
-      child: ButtonTheme(
-        minWidth: minWidth,
-        height: height,
-        child: TextButton(
-
-          //FIXME: Ajustar estilos
-          // shape:
-          //     RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
-          // elevation: 15,
-          onPressed: () => cb(text),
-          child: Text(
-            text,
-            style: TextStyle(fontSize: fontSize),
+    return Container(
+      width: width,
+      height: height,
+      margin: EdgeInsets.all(4),
+      child: Material(
+        color: backgroundColor,
+        borderRadius: BorderRadius.circular(6),
+        elevation: 3,
+        child: InkWell(
+          borderRadius: BorderRadius.circular(6),
+          onTap: () => cb(text),
+          child: Center(
+            child: Text(
+              text,
+              style: TextStyle(
+                fontSize: fontSize,
+                fontWeight: FontWeight.bold,
+                color: textColor,
+              ),
+            ),
           ),
-          // textColor: this.textColor,
-          // color: this.color,
         ),
       ),
     );
