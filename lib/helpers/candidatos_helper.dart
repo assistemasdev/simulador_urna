@@ -44,13 +44,12 @@ class CandidatosHelper {
       final int tabs = '\t'.allMatches(primeiraLinha).length;
       final String fieldDelimiter = (tabs > semis) ? '\t' : ';';
 
-      final linhas = CsvToListConverter(
+      final linhas = Csv(
         fieldDelimiter: fieldDelimiter,
-        textDelimiter: '"',
-        eol: '\n',
-        shouldParseNumbers: false,
-        allowInvalid: true,
-      ).convert(raw);
+        quoteCharacter: '"',
+        lineDelimiter: '\n',
+        dynamicTyping: false,
+      ).decode(raw);
 
       if (linhas.isEmpty) return _cache = <Candidato>[];
 
@@ -64,7 +63,7 @@ class CandidatosHelper {
       final lista = <Candidato>[];
       for (var i = 1; i < linhas.length; i++) {
         final l = linhas[i];
-        if (l == null || l.isEmpty) continue;
+        if (l.isEmpty) continue;
 
         String valor(int idx) => (idx < 0 || idx >= l.length) ? '' : _limpar(l[idx].toString());
 

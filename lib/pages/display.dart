@@ -193,16 +193,21 @@ class Display extends StatelessWidget {
           : Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: <Widget>[
-                FadeAnimatedTextKit(
+                AnimatedTextKit(
                     onTap: () {
                       print("Tap Event");
                     },
                     repeatForever: true,
-                    text: ["VOTO NULO", "VOTO NULO"],
-                    textStyle: TextStyle(
-                        fontSize: 50.0, fontWeight: FontWeight.bold),
-                    textAlign: TextAlign.start,
-                    alignment: AlignmentDirectional.topStart),
+                    animatedTexts: [
+                      FadeAnimatedText("VOTO NULO",
+                          textStyle: TextStyle(
+                              fontSize: 50.0, fontWeight: FontWeight.bold),
+                          textAlign: TextAlign.start),
+                      FadeAnimatedText("VOTO NULO",
+                          textStyle: TextStyle(
+                              fontSize: 50.0, fontWeight: FontWeight.bold),
+                          textAlign: TextAlign.start),
+                    ]),
               ],
             ),
     );
@@ -214,15 +219,19 @@ class Display extends StatelessWidget {
       child: Row(
         mainAxisAlignment: MainAxisAlignment.center,
         children: <Widget>[
-          FadeAnimatedTextKit(
+          AnimatedTextKit(
               onTap: () {
                 print("Tap Event");
               },
               repeatForever: true,
-              text: ["VOTO EM BRANCO", "VOTO EM BRANCO"],
-              textStyle: TextStyle(fontSize: 60.0, fontWeight: FontWeight.bold),
-              textAlign: TextAlign.start,
-              alignment: AlignmentDirectional.topStart),
+              animatedTexts: [
+                FadeAnimatedText("VOTO EM BRANCO",
+                    textStyle: TextStyle(fontSize: 60.0, fontWeight: FontWeight.bold),
+                    textAlign: TextAlign.start),
+                FadeAnimatedText("VOTO EM BRANCO",
+                    textStyle: TextStyle(fontSize: 60.0, fontWeight: FontWeight.bold),
+                    textAlign: TextAlign.start),
+              ]),
         ],
       ),
     );

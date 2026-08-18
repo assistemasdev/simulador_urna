@@ -104,7 +104,7 @@ class RelatorioHelper {
     }
 
     // fieldDelimiter ';' para abrir certinho no Excel pt-BR
-    final csv = const ListToCsvConverter(fieldDelimiter: ';').convert(linhas);
+    final csv = Csv(fieldDelimiter: ';').encode(linhas);
 
     final directory = await getApplicationDocumentsDirectory();
     final file = File('${directory.path}/resultado_votos.csv');
