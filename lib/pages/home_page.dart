@@ -87,18 +87,21 @@ class _HomePageState extends State<HomePage> {
                             SizedBox(height: 20),
                             Text('Voto computado com sucesso!', style: TextStyle(fontSize: 30, color: Colors.black)),
                             SizedBox(height: 50),
-                            RaisedButton(
+                            ElevatedButton(
                               onPressed: () {
                                 memory.resetForNewVote(); // Limpa TUDO, inclusive endereço
                                 Navigator.pop(context); // Volta para a AddressScreen
                               },
-                              color: Colors.green, textColor: Colors.white,
-                              padding: EdgeInsets.symmetric(horizontal: 50, vertical: 20),
-                              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+                              style: ElevatedButton.styleFrom(
+                                backgroundColor: Colors.green,
+                                foregroundColor: Colors.white,
+                                padding: EdgeInsets.symmetric(horizontal: 50, vertical: 20),
+                                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+                              ),
                               child: Text('PRÓXIMO VOTO', style: TextStyle(fontSize: 36, fontWeight: FontWeight.bold)),
                             ),
                             SizedBox(height: 30),
-                            FlatButton(
+                            TextButton(
                               onPressed: () {
                                 memory.resetForNewVote();
                                 Navigator.pop(context);

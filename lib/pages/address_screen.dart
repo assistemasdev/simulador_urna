@@ -47,10 +47,14 @@ class _AddressScreenState extends State<AddressScreen> {
                 style: TextStyle(fontSize: 20),
               ),
               SizedBox(height: 30),
-              RaisedButton(
-                onPressed: _iniciarVotacao, color: Colors.green, textColor: Colors.white,
-                padding: EdgeInsets.symmetric(horizontal: 40, vertical: 15),
-                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+              ElevatedButton(
+                onPressed: _iniciarVotacao,
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: Colors.green,
+                  foregroundColor: Colors.white,
+                  padding: EdgeInsets.symmetric(horizontal: 40, vertical: 15),
+                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+                ),
                 child: Text('INICIAR VOTAÇÃO', style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold)),
               ),
             ],
