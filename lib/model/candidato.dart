@@ -13,11 +13,11 @@ class Candidato {
     this.partido,
   });
 
-  /// FCE{SQ_CANDIDATO}_div.jpg
-  String get imagePath => 'assets/images/eleicoes2026/FCE${sqCandidato}_div.jpg';
-
-  @override
-  String toString() {
-    return "Candidato(cargo: $cargo, numero: $numero, nome: $nome, partido: $partido)";
+  String get imagePath {
+    bool ehPresidencial = cargo == 'PRESIDENTE' || cargo == 'VICE-PRESIDENTE';
+    String prefixo = ehPresidencial ? 'FBR' : 'FCE';
+    
+    // Ex: assets/images/eleicoes2026/FBR280002542548_div.jpg
+    return 'assets/images/eleicoes2026/${prefixo}${sqCandidato}_div.jpg';
   }
 }

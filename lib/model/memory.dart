@@ -13,6 +13,7 @@ class Memory {
   int _currentCargoIndex = 0;
 
   Map<String, String> _votosMap = {};
+  String _endereco = ''; // <-- NOVO
 
   String _value = '';
   bool _wipeValue = false;
@@ -20,25 +21,18 @@ class Memory {
   bool _voteFinished = false;
 
   CargoConfig get currentCargo => _cargos[_currentCargoIndex];
-
   bool get isLastCargo => _currentCargoIndex == _cargos.length - 1;
-
   bool get voteFinished => _voteFinished;
+  String get endereco => _endereco; // <-- NOVO
 
-  void resetVote() {
-    _voteFinished = false;
-  }
+  void setEndereco(String endereco) { _endereco = endereco; }
+  void resetVote() { _voteFinished = false; }
 
   void applyCommand(String text) {
-    if (text == 'CORRIGE') {
-      _allClear();
-    } else if (text == 'BRANCO') {
-      _blanck(text);
-    } else if (text == 'CONFIRMA') {
-      _confirma();
-    } else {
-      _addDigit(text);
-    }
+    if (text == 'CORRIGE') { _allClear(); } 
+    else if (text == 'BRANCO') { _blanck(text); } 
+    else if (text == 'CONFIRMA') { _confirma(); } 
+    else { _addDigit(text); }
   }
 
   _confirma() {
@@ -60,74 +54,53 @@ class Memory {
 
   _addDigit(String digit) {
     final currentValue = _wipeValue ? '' : _value;
-    if (_value.length >= currentCargo.digitos) {
-      return;
-    } else {
-      _value = currentValue + digit;
-      _wipeValue = false;
-    }
+    if (_value.length >= currentCargo.digitos) return;
+    _value = currentValue + digit;
+    _wipeValue = false;
   }
 
-  _allClear() {
-    _value = '';
-    _candidatoId = [];
-  }
-
-  _blanck(String text) {
-    if (_value.isEmpty) {
-      _value = text;
-    }
-  }
+  _allClear() { _value = ''; _candidatoId = []; }
+  _blanck(String text) { if (_value.isEmpty) _value = text; }
 
   String get value => _value;
-
   int get currentCargoIndex => _currentCargoIndex;
-
   List<CargoConfig> get cargos => _cargos;
+  List get candidatoId => _candidatoId;
 
   Future<AudioPlayer> playSoundConfirm() async {
     AudioCache cache = new AudioCache();
     return await cache.play("som.mp3");
   }
 
-  /// Busca candidato pelo número digitado, usando o CSV via helper
-    Future loadCandidatos(String numero) async {
+  Future loadCandidatos(String numero) async {
     try {
-      final candidato =
-          await _candidatosHelper.buscar(currentCargo.dsCargo, numero);
+      final candidato = await _candidatosHelper.buscar(currentCargo.dsCargo, numero);
 
       if (candidato != null) {
-        _candidatoId = [];
-        _candidatoId.add(candidato.numero);
-        _candidatoId.add(candidato.nome);
-        _candidatoId.add(candidato.partido);
-        _candidatoId.add(candidato.imagePath);
+        _candidatoId = [candidato.numero, candidato.nome, candidato.partido, candidato.imagePath];
 
-        if (currentCargo.cargo == Cargo.GOVERNADOR) {
-          final vice = await _candidatosHelper.buscarVice(numero);
+        if (currentCargo.cargo == Cargo.PRESIDENTE || currentCargo.cargo == Cargo.GOVERNADOR) {
+          final vice = await _candidatosHelper.buscarVice(numero, currentCargo.dsCargo);
           if (vice != null) {
-            _candidatoId.add(vice.imagePath);
-            _candidatoId.add(vice.nome);
+            _candidatoId.addAll([vice.imagePath, vice.nome, vice.partido]);
+          } else {
+            _candidatoId.addAll(['', 'Vice não encontrado', '']);
           }
         }
       } else {
         _candidatoId = [];
       }
-      print('Candidato: $_candidatoId');
     } catch (e) {
-      print('[MEMORIA] ❌ Erro ao carregar candidato: $e');
+      print('[MEMORIA] ❌ Erro: $e');
       _candidatoId = [];
     }
   }
 
-  List get candidatoId => _candidatoId;
-
   Future saveVote() async {
-    print('Votos: $_votosMap');
+    _votosMap['endereco_pesquisa'] = _endereco; // <-- SALVA O ENDEREÇO
+    print('Votos salvos: $_votosMap');
     await helper.saveVoto(_votosMap);
-    _votosMap = {};
-    _currentCargoIndex = 0;
-    return helper.getAllVotos().then((list) => print(list));
+    return helper.getAllVotos().then((list) => print('Total no DB: ${list.length}'));
   }
 
   void resetForNewVote() {
@@ -135,5 +108,6 @@ class Memory {
     _currentCargoIndex = 0;
     _value = '';
     _candidatoId = [];
+    _endereco = ''; // <-- LIMPA O ENDEREÇO PARA O PRÓXIMO
   }
 }

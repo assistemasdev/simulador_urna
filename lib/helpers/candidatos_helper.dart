@@ -1,6 +1,5 @@
 import 'dart:convert';
 import 'dart:typed_data';
-
 import 'package:csv/csv.dart';
 import 'package:flutter/services.dart' show rootBundle;
 import 'package:urna_eletronica/model/candidato.dart';
@@ -11,7 +10,6 @@ class CandidatosHelper {
   CandidatosHelper.internal();
 
   static const String CSV_PATH = 'assets/csv/candidatos.csv';
-
   List<Candidato> _cache;
 
   String _normalizarNumero(String s) {
@@ -29,17 +27,14 @@ class CandidatosHelper {
     if (_cache != null) return _cache;
 
     try {
-      // Lê como BYTES: arquivos TSE são Latin-1, loadString() quebra em UTF-8
       final ByteData data = await rootBundle.load(CSV_PATH);
       final Uint8List bytes = data.buffer.asUint8List();
 
       String raw;
       try {
         raw = utf8.decode(bytes);
-        print('[CSV] Encoding: UTF-8');
       } catch (_) {
         raw = latin1.decode(bytes);
-        print('[CSV] Encoding: Latin-1 ✅');
       }
 
       if (raw.startsWith('\ufeff')) raw = raw.substring(1);
@@ -49,7 +44,6 @@ class CandidatosHelper {
       final int semis = ';'.allMatches(primeiraLinha).length;
       final int tabs = '\t'.allMatches(primeiraLinha).length;
       final String fieldDelimiter = (tabs > semis) ? '\t' : ';';
-      print('[CSV] Separador: "$fieldDelimiter" (;=$semis, TAB=$tabs)');
 
       final linhas = CsvToListConverter(
         fieldDelimiter: fieldDelimiter,
@@ -59,7 +53,6 @@ class CandidatosHelper {
         allowInvalid: true,
       ).convert(raw);
 
-      print('[CSV] Linhas: ${linhas.length}');
       if (linhas.isEmpty) return _cache = <Candidato>[];
 
       final header = linhas.first.map((e) => _limpar(e.toString())).toList();
@@ -68,20 +61,13 @@ class CandidatosHelper {
       final iNumero = header.indexOf('NR_CANDIDATO');
       final iNome = header.indexOf('NM_URNA_CANDIDATO');
       final iPartido = header.indexOf('SG_PARTIDO');
-      print('[CSV] Índices: cargo=$iCargo sq=$iSq num=$iNumero nome=$iNome part=$iPartido');
-
-      if (iNumero < 0 || iCargo < 0) {
-        print('[CSV] ❌ Coluna não encontrada! Cabeçalho: $header');
-        return _cache = <Candidato>[];
-      }
 
       final lista = <Candidato>[];
       for (var i = 1; i < linhas.length; i++) {
         final l = linhas[i];
         if (l == null || l.isEmpty) continue;
 
-        String valor(int idx) =>
-            (idx == null || idx < 0 || idx >= l.length) ? '' : _limpar(l[idx].toString());
+        String valor(int idx) => (idx == null || idx < 0 || idx >= l.length) ? '' : _limpar(l[idx].toString());
 
         final cargo = valor(iCargo).toUpperCase();
         final numero = _normalizarNumero(valor(iNumero));
@@ -96,18 +82,10 @@ class CandidatosHelper {
         ));
       }
 
-      print('[CSV] ✅ Candidatos carregados: ${lista.length}');
-      final sued = lista.where((c) => c.numero == '8080').toList();
-      if (sued.isNotEmpty) {
-        print('[CSV] 🎯 Teste 8080: ${sued.first.nome} / ${sued.first.cargo}');
-      } else {
-        print('[CSV] ⚠️ 8080 NÃO está na lista parseada!');
-      }
-
+      print('[CSV] ✅ Total de candidatos carregados: ${lista.length}');
       return _cache = lista;
     } catch (e, st) {
-      // QUALQUER erro cai aqui e aparece no console
-      print('[CSV] ❌ ERRO FATAL ao carregar: $e');
+      print('[CSV] ❌ ERRO ao carregar: $e');
       print(st);
       return _cache = <Candidato>[];
     }
@@ -116,18 +94,28 @@ class CandidatosHelper {
   Future<Candidato> buscar(String dsCargo, String numero) async {
     final todos = await carregarTodos();
     final numNorm = _normalizarNumero(numero);
-    print('[BUSCA] "$dsCargo" / "$numNorm" entre ${todos.length} candidatos');
     for (final c in todos) {
       if (c.cargo == dsCargo && c.numero == numNorm) return c;
     }
     return null;
   }
 
-  Future<Candidato> buscarVice(String numero) async {
+  // Lógica dinâmica para buscar o Vice correto
+  Future<Candidato> buscarVice(String numero, String cargoPrincipal) async {
     final todos = await carregarTodos();
     final numNorm = _normalizarNumero(numero);
+    
+    String cargoViceEsperado = '';
+    if (cargoPrincipal == 'PRESIDENTE') {
+      cargoViceEsperado = 'VICE-PRESIDENTE';
+    } else if (cargoPrincipal == 'GOVERNADOR') {
+      cargoViceEsperado = 'VICE-GOVERNADOR';
+    } else {
+      return null;
+    }
+
     for (final c in todos) {
-      if (c.cargo == 'VICE-GOVERNADOR' && c.numero == numNorm) return c;
+      if (c.cargo == cargoViceEsperado && c.numero == numNorm) return c;
     }
     return null;
   }

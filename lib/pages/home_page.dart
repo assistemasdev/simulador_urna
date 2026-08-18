@@ -38,21 +38,11 @@ class _HomePageState extends State<HomePage> {
       } else if (text == 'CONFIRMA' && memory.value.isEmpty) {
         _onClickVoidConfirm();
       } else {
-        print(text);
-        print(memory.value);
         memory.applyCommand(text);
         controller.sink.add(memory.value);
 
         if (memory.voteFinished) {
-          _showEndScreen = true;
-          Future.delayed(Duration(seconds: 2), () {
-            if (mounted) {
-              setState(() {
-                _showEndScreen = false;
-                memory.resetVote();
-              });
-            }
-          });
+          _showEndScreen = true; // SEM TIMER, apenas muda o estado
         }
       }
     });
@@ -61,11 +51,7 @@ class _HomePageState extends State<HomePage> {
   @override
   void initState() {
     super.initState();
-
-    Stream<String> output = controller.stream;
-
-    output.listen((data) {
-      print("Escutando " + data);
+    controller.stream.listen((data) {
       if (data.length == memory.currentCargo.digitos) {
         memory.loadCandidatos(data);
       }
@@ -84,12 +70,10 @@ class _HomePageState extends State<HomePage> {
       body: Container(
         color: Colors.white,
         child: Center(
-          // FittedBox escala o layout 1280x800 pra caber em QUALQUER tela
           child: FittedBox(
             fit: BoxFit.contain,
             child: SizedBox(
-              width: 1280,
-              height: 800,
+              width: 1280, height: 800,
               child: Stack(
                 children: <Widget>[
                   if (_showEndScreen)
@@ -99,48 +83,41 @@ class _HomePageState extends State<HomePage> {
                         child: Column(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
-                            Text(
-                              'FIM',
-                              style: TextStyle(
-                                fontSize: 120,
-                                fontWeight: FontWeight.bold,
-                                color: Colors.black,
-                              ),
-                            ),
+                            Text('FIM', style: TextStyle(fontSize: 120, fontWeight: FontWeight.bold, color: Colors.black)),
                             SizedBox(height: 20),
-                            Text(
-                              'Voto computado com sucesso!',
-                              style: TextStyle(
-                                fontSize: 30,
-                                color: Colors.black,
-                              ),
+                            Text('Voto computado com sucesso!', style: TextStyle(fontSize: 30, color: Colors.black)),
+                            SizedBox(height: 50),
+                            RaisedButton(
+                              onPressed: () {
+                                memory.resetForNewVote(); // Limpa TUDO, inclusive endereço
+                                Navigator.pop(context); // Volta para a AddressScreen
+                              },
+                              color: Colors.green, textColor: Colors.white,
+                              padding: EdgeInsets.symmetric(horizontal: 50, vertical: 20),
+                              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+                              child: Text('PRÓXIMO VOTO', style: TextStyle(fontSize: 36, fontWeight: FontWeight.bold)),
                             ),
+                            SizedBox(height: 30),
+                            FlatButton(
+                              onPressed: () {
+                                memory.resetForNewVote();
+                                Navigator.pop(context);
+                              },
+                              child: Text('Cancelar / Voltar', style: TextStyle(fontSize: 18, color: Colors.red)),
+                            )
                           ],
                         ),
                       ),
                     )
                   else ...[
-                    Display(
-                      memory.value,
-                      memory.currentCargoIndex,
-                      memory.candidatoId,
-                      memory.currentCargo.nome,
-                      memory.currentCargo.digitos,
-                    ),
+                    Display(memory.value, memory.currentCargoIndex, memory.candidatoId, memory.currentCargo.nome, memory.currentCargo.digitos),
                     Keyboard(_onPressed)
                   ],
-
-                  // ===== ZONA SECRETA (canto inferior direito) =====
                   Positioned(
-                    right: 0,
-                    bottom: 0,
+                    right: 0, bottom: 0,
                     child: GestureDetector(
                       onTap: () => _showMenu(context),
-                      child: Container(
-                        width: 70,
-                        height: 70,
-                        color: Colors.transparent,
-                      ),
+                      child: Container(width: 70, height: 70, color: Colors.transparent),
                     ),
                   ),
                 ],
