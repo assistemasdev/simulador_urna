@@ -2,7 +2,7 @@ import 'dart:async';
 import 'package:audioplayers/audioplayers.dart';
 import 'package:flushbar/flushbar.dart';
 import 'package:flutter/material.dart';
-import 'package:share_extend/share_extend.dart';
+import 'package:share_plus/share_plus.dart';
 import 'package:urna_eletronica/helpers/urna_helper.dart';
 import 'package:urna_eletronica/model/memory.dart';
 import 'package:urna_eletronica/pages/display.dart';
@@ -171,7 +171,7 @@ class _HomePageState extends State<HomePage> {
                 Navigator.pop(ctx);
                 try {
                   final file = await relatorio.gerarCSV();
-                  await ShareExtend.share(file.path, "file");
+                  await SharePlus.instance.share(ShareParams(files: [XFile(file.path)]));
                 } catch (e) {
                   ScaffoldMessenger.of(context).showSnackBar(
                     SnackBar(content: Text("Erro ao gerar relatório: $e")),

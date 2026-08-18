@@ -1,7 +1,7 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:path_provider/path_provider.dart';
-import 'package:share_extend/share_extend.dart';
+import 'package:share_plus/share_plus.dart';
 import 'package:urna_eletronica/helpers/urna_helper.dart';
 import 'package:urna_eletronica/pages/home_page.dart';
 import 'package:urna_eletronica/util/nav.dart';
@@ -116,7 +116,7 @@ class _DashboardState extends State<Dashboard> {
   _shareCSV() async {
     final directory = await getApplicationDocumentsDirectory();
     final file = File('${directory.path}/votos.csv');
-    return ShareExtend.share(file.path, "file");
+    return SharePlus.instance.share(ShareParams(files: [XFile(file.path)]));
   }
 
   _onClickLogout(BuildContext context) {
