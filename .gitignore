@@ -44,3 +44,9 @@ app.*.map.json
 
 # FVM Version Cache
 .fvm/
+
+# iOS ephemeral (não usamos iOS, mas o tooling gera mesmo assim)
+**/ios/Flutter/ephemeral/
+
+# Kotlin Gradle plugin build cache
+android/.kotlin/
