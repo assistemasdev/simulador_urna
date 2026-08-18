@@ -6,11 +6,11 @@ class Candidato {
   final String partido;
 
   Candidato({
-    this.cargo,
-    this.sqCandidato,
-    this.numero,
-    this.nome,
-    this.partido,
+    required this.cargo,
+    required this.sqCandidato,
+    required this.numero,
+    required this.nome,
+    required this.partido,
   });
 
   String get imagePath {

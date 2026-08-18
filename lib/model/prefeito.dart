@@ -2,12 +2,11 @@ class PrefeitoList {
   final List<Prefeito> prefeito;
 
   PrefeitoList({
-    this.prefeito,
+    required this.prefeito,
   });
 
   factory PrefeitoList.fromJson(List<dynamic> parsedJson) {
-    List<Prefeito> prefeito = List<Prefeito>();
-    prefeito = parsedJson.map((i) => Prefeito.fromJson(i)).toList();
+    List<Prefeito> prefeito = parsedJson.map((i) => Prefeito.fromJson(i)).toList();
 
     return PrefeitoList(prefeito: prefeito);
   }
@@ -21,19 +20,19 @@ class Prefeito {
   final String imagePathVice;
 
   Prefeito(
-      {this.numero,
-      this.nome,
-      this.partido,
-      this.imagePath,
-      this.imagePathVice});
+      {required this.numero,
+      required this.nome,
+      required this.partido,
+      required this.imagePath,
+      required this.imagePathVice});
 
   factory Prefeito.fromJson(Map<String, dynamic> json) {
     return Prefeito(
-      numero: json['numero'],
-      nome: json['nome'],
-      partido: json['partido'],
-      imagePath: json['imagePath'],
-      imagePathVice: json['imagePathVice'],
+      numero: json['numero'] as String,
+      nome: json['nome'] as String,
+      partido: json['partido'] as String,
+      imagePath: json['imagePath'] as String,
+      imagePathVice: json['imagePathVice'] as String,
     );
   }
 }

@@ -27,14 +27,14 @@ class UrnaHelper {
 
   UrnaHelper.internal();
 
-  Database _db;
+  Database? _db;
 
   Future<Database> get db async {
     if (_db != null) {
-      return _db;
+      return _db!;
     } else {
       _db = await initDb();
-      return _db;
+      return _db!;
     }
   }
 
@@ -150,11 +150,7 @@ class UrnaHelper {
 
   Future<File> createCSV() async {
     final directory = await getApplicationDocumentsDirectory();
-    if (directory != null) {
-      return File('${directory.path}/votos.csv').create(recursive: true);
-    } else {
-      return File('${directory.path}/votos.csv');
-    }
+    return File('${directory.path}/votos.csv').create(recursive: true);
   }
 
   /// Exporta votos para CSV baseado na eleição atual (legado, mantido)
@@ -232,9 +228,9 @@ class UrnaHelper {
 
 /// Classe legada para compatibilidade (não mais usada no fluxo principal)
 class Votos {
-  int id;
-  String vereador;
-  String prefeito;
+  int? id;
+  String? vereador;
+  String? prefeito;
 
   Votos();
 
@@ -244,7 +240,7 @@ class Votos {
     prefeito = map[votoPrefeito];
   }
 
-  Map toMap() {
+  Map<String, dynamic> toMap() {
     Map<String, dynamic> map = {
       votoVereador: vereador,
       votoPrefeito: prefeito,
@@ -263,8 +259,8 @@ class Votos {
 
 /// Classe para voto genérico (nova)
 class VotoGenerico {
-  int id;
-  Map<String, String> votos;
+  int? id;
+  Map<String, String>? votos;
 
   VotoGenerico({this.id, this.votos});
 
@@ -273,7 +269,7 @@ class VotoGenerico {
     votos = {};
     map.forEach((key, value) {
       if (key != idVoto && value != null) {
-        votos[key] = value.toString();
+        votos![key] = value.toString();
       }
     });
   }
@@ -283,7 +279,7 @@ class VotoGenerico {
     if (id != null) {
       map[idVoto] = id;
     }
-    map.addAll(votos);
+    map.addAll(votos ?? {});
     return map;
   }
 

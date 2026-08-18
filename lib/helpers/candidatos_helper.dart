@@ -10,10 +10,9 @@ class CandidatosHelper {
   CandidatosHelper.internal();
 
   static const String CSV_PATH = 'assets/csv/candidatos.csv';
-  List<Candidato> _cache;
+  List<Candidato>? _cache;
 
   String _normalizarNumero(String s) {
-    if (s == null) return '';
     String n = s.trim();
     while (n.length > 1 && n.startsWith('0')) {
       n = n.substring(1);
@@ -21,10 +20,10 @@ class CandidatosHelper {
     return n;
   }
 
-  String _limpar(String s) => (s ?? '').toString().trim();
+  String _limpar(String s) => s.toString().trim();
 
   Future<List<Candidato>> carregarTodos() async {
-    if (_cache != null) return _cache;
+    if (_cache != null) return _cache!;
 
     try {
       final ByteData data = await rootBundle.load(CSV_PATH);
@@ -67,7 +66,7 @@ class CandidatosHelper {
         final l = linhas[i];
         if (l == null || l.isEmpty) continue;
 
-        String valor(int idx) => (idx == null || idx < 0 || idx >= l.length) ? '' : _limpar(l[idx].toString());
+        String valor(int idx) => (idx < 0 || idx >= l.length) ? '' : _limpar(l[idx].toString());
 
         final cargo = valor(iCargo).toUpperCase();
         final numero = _normalizarNumero(valor(iNumero));
@@ -91,7 +90,7 @@ class CandidatosHelper {
     }
   }
 
-  Future<Candidato> buscar(String dsCargo, String numero) async {
+  Future<Candidato?> buscar(String dsCargo, String numero) async {
     final todos = await carregarTodos();
     final numNorm = _normalizarNumero(numero);
     for (final c in todos) {
@@ -101,7 +100,7 @@ class CandidatosHelper {
   }
 
   // Lógica dinâmica para buscar o Vice correto
-  Future<Candidato> buscarVice(String numero, String cargoPrincipal) async {
+  Future<Candidato?> buscarVice(String numero, String cargoPrincipal) async {
     final todos = await carregarTodos();
     final numNorm = _normalizarNumero(numero);
     

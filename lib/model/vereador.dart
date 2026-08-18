@@ -2,12 +2,11 @@ class VereadorList {
   final List<Vereador> vereador;
 
   VereadorList({
-    this.vereador,
+    required this.vereador,
   });
 
   factory VereadorList.fromJson(List<dynamic> parsedJson) {
-    List<Vereador> vereador = List<Vereador>();
-    vereador = parsedJson.map((i) => Vereador.fromJson(i)).toList();
+    List<Vereador> vereador = parsedJson.map((i) => Vereador.fromJson(i)).toList();
 
     return VereadorList(vereador: vereador);
   }
@@ -19,14 +18,14 @@ class Vereador {
   final String partido;
   final String imagePath;
 
-  Vereador({this.numero, this.nome, this.partido, this.imagePath});
+  Vereador({required this.numero, required this.nome, required this.partido, required this.imagePath});
 
   factory Vereador.fromJson(Map<String, dynamic> json) {
     return Vereador(
-      numero: json['numero'],
-      nome: json['nome'],
-      partido: json['partido'],
-      imagePath: json['imagePath'],
+      numero: json['numero'] as String,
+      nome: json['nome'] as String,
+      partido: json['partido'] as String,
+      imagePath: json['imagePath'] as String,
     );
   }
 }

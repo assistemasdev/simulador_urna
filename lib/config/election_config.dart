@@ -15,7 +15,7 @@ class CargoConfig {
   final String dsCargo;
   final String tableVotos;
 
-  CargoConfig({this.cargo, this.nome, this.digitos, this.dsCargo, this.tableVotos});
+  CargoConfig({required this.cargo, required this.nome, required this.digitos, required this.dsCargo, required this.tableVotos});
 }
 
 class ElectionConfig {
@@ -41,24 +41,7 @@ class ElectionConfig {
   }
 }
 
-      case ElectionType.MUNICIPAL_2028:
-        return [
-          CargoConfig(
-            cargo: Cargo.VEREADOR,
-            nome: 'Vereador',
-            digitos: 5,
-            dsCargo: 'assets/json/vereador.json',
-            tableVotos: 'votoVereador',
-          ),
-          CargoConfig(
-            cargo: Cargo.PREFEITO,
-            nome: 'Prefeito',
-            digitos: 2,
-            dsCargo: 'assets/json/prefeito.json',
-            tableVotos: 'votoPrefeito',
-          ),
-        ];
-    }
-    return [];
-  }
+enum ElectionType {
+  GERAL_2026,
+  MUNICIPAL_2028,
 }

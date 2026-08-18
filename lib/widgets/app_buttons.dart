@@ -15,7 +15,7 @@ class Button extends StatelessWidget {
   final double height;
 
   // Tecla numérica
-  Button({this.text, this.cb})
+  Button({required this.text, required this.cb})
       : backgroundColor = COR_NUMERO,
         textColor = Colors.black,
         fontSize = 32,
@@ -23,7 +23,7 @@ class Button extends StatelessWidget {
         height = 64;
 
   // BRANCO
-  Button.white({this.text, this.cb})
+  Button.white({required this.text, required this.cb})
       : backgroundColor = COR_BRANCO,
         textColor = Colors.black,
         fontSize = 14,
@@ -31,7 +31,7 @@ class Button extends StatelessWidget {
         height = 54;
 
   // CORRIGE
-  Button.orange({this.text, this.cb})
+  Button.orange({required this.text, required this.cb})
       : backgroundColor = COR_CORRIGE,
         textColor = Colors.white,
         fontSize = 14,
@@ -39,7 +39,7 @@ class Button extends StatelessWidget {
         height = 54;
 
   // CONFIRMA
-  Button.green({this.text, this.cb})
+  Button.green({required this.text, required this.cb})
       : backgroundColor = COR_CONFIRMA,
         textColor = Colors.white,
         fontSize = 14,

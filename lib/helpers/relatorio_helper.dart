@@ -41,9 +41,9 @@ class RelatorioHelper {
         sb.writeln('(nenhum voto)');
       } else {
         final ordenados = contagem.keys.toList()
-          ..sort((a, b) => contagem[b].compareTo(contagem[a]));
+          ..sort((a, b) => contagem[b]!.compareTo(contagem[a]!));
         for (final numero in ordenados) {
-          sb.writeln('${_descreverVoto(candidatos[cargo.cargo], numero)}: ${contagem[numero]} voto(s)');
+          sb.writeln('${_descreverVoto(candidatos[cargo.cargo]!, numero)}: ${contagem[numero]} voto(s)');
         }
       }
       sb.writeln();
@@ -135,9 +135,9 @@ class RelatorioHelper {
   }
 
   String _descreverVoto(Map<String, Map<String, String>> candidatos, String numero) {
-    if (numero == null || numero.isEmpty) return '(sem voto)';
+    if (numero.isEmpty) return '(sem voto)';
     if (numero == 'BRANCO') return 'VOTO EM BRANCO';
-    final c = candidatos == null ? null : candidatos[numero];
+    final c = candidatos[numero];
     if (c == null) return 'VOTO NULO [$numero]';
     return '${c['nome']} (${c['partido']}) [$numero]';
   }
