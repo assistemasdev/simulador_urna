@@ -1,4 +1,3 @@
-import 'package:audioplayers/audio_cache.dart';
 import 'package:audioplayers/audioplayers.dart';
 import 'dart:async' show Future;
 import 'package:urna_eletronica/helpers/urna_helper.dart';
@@ -67,9 +66,10 @@ class Memory {
   List<CargoConfig> get cargos => _cargos;
   List get candidatoId => _candidatoId;
 
-  Future<AudioPlayer> playSoundConfirm() async {
-    AudioCache cache = new AudioCache();
-    return await cache.play("som.mp3");
+  final AudioPlayer _player = AudioPlayer();
+
+  Future<void> playSoundConfirm() async {
+    await _player.play(AssetSource("som.mp3"));
   }
 
   Future loadCandidatos(String numero) async {

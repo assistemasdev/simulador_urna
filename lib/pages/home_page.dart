@@ -1,5 +1,4 @@
 import 'dart:async';
-import 'package:audioplayers/audio_cache.dart';
 import 'package:audioplayers/audioplayers.dart';
 import 'package:flushbar/flushbar.dart';
 import 'package:flutter/material.dart';
@@ -281,8 +280,8 @@ class _HomePageState extends State<HomePage> {
     )..show(context);
   }
 
-  Future<AudioPlayer> playSoundConfirm() async {
-    AudioCache cache = new AudioCache();
-    return await cache.play("som.mp3");
+  Future<void> playSoundConfirm() async {
+    final player = AudioPlayer();
+    await player.play(AssetSource("som.mp3"));
   }
 }
