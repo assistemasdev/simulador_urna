@@ -5,6 +5,10 @@ import 'package:urna_eletronica/helpers/candidatos_helper.dart';
 import 'package:urna_eletronica/config/election_config.dart';
 
 class Memory {
+  static final Memory _instance = Memory.internal();
+  factory Memory() => _instance;
+  Memory.internal();
+
   UrnaHelper helper = UrnaHelper();
   final CandidatosHelper _candidatosHelper = CandidatosHelper();
 
