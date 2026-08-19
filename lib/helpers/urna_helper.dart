@@ -19,6 +19,7 @@ final String votoDeputadoEstadual = "votoDeputadoEstadual";
 final String votoSenador = "votoSenador";
 final String votoGovernador = "votoGovernador";
 final String votoPresidente = "votoPresidente";
+final String enderecoPesquisaColumn = "endereco_pesquisa"; // NOVO: coluna do local/endereço da pesquisa
 
 class UrnaHelper {
   static final UrnaHelper _instance = UrnaHelper.internal();
@@ -43,8 +44,8 @@ class UrnaHelper {
     final path = join(databasesPath, "urna_eletronica.db");
 
     return await openDatabase(
-      path, 
-      version: 3, // v1: antigo, v2: cargos novos, v3: coluna dataVoto
+      path,
+      version: 4, // v1: antigo, v2: cargos novos, v3: coluna dataVoto, v4: coluna endereco_pesquisa
       onCreate: (Database db, int version) async {
         await _createAllTables(db);
       },
@@ -55,6 +56,9 @@ class UrnaHelper {
         if (oldVersion < 3) {
           await _migrateToVersion3(db);
         }
+        if (oldVersion < 4) {
+          await _migrateToVersion4(db);
+        }
       }
     );
   }
@@ -64,6 +68,7 @@ class UrnaHelper {
       CREATE TABLE $votosTable(
         $idVoto INTEGER PRIMARY KEY AUTOINCREMENT,
         $dataVotoColumn TEXT,
+        $enderecoPesquisaColumn TEXT,
         $votoVereador TEXT,
         $votoPrefeito TEXT,
         $votoDeputadoFederal TEXT,
@@ -101,6 +106,15 @@ class UrnaHelper {
   Future<void> _migrateToVersion3(Database db) async {
     try {
       await db.execute("ALTER TABLE $votosTable ADD COLUMN $dataVotoColumn TEXT");
+    } catch (e) {}
+  }
+
+  /// Migração v3 -> v4: adiciona coluna endereco_pesquisa em bancos antigos.
+  /// Sem essa coluna, saveVoto() falhava ao tentar inserir uma chave que
+  /// não existe na tabela, e NENHUM voto era salvo (INSERT falha por completo).
+  Future<void> _migrateToVersion4(Database db) async {
+    try {
+      await db.execute("ALTER TABLE $votosTable ADD COLUMN $enderecoPesquisaColumn TEXT");
     } catch (e) {}
   }
 

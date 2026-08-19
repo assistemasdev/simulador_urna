@@ -99,7 +99,12 @@ class Memory {
   Future saveVote() async {
     _votosMap['endereco_pesquisa'] = _endereco; // <-- SALVA O ENDEREÇO
     print('Votos salvos: $_votosMap');
-    await helper.saveVoto(_votosMap);
+    try {
+      await helper.saveVoto(_votosMap);
+    } catch (e) {
+      print('[MEMORIA] ❌ Erro ao salvar voto no banco: $e');
+      rethrow;
+    }
     return helper.getAllVotos().then((list) => print('Total no DB: ${list.length}'));
   }
 
