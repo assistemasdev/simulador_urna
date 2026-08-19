@@ -196,8 +196,10 @@ class UrnaHelper {
     }
   }
 
-  String mapListToCsv(List<Map<String, dynamic>> mapList, {Csv? converter}) {
-    converter ??= Csv();
+    String mapListToCsv(List<Map<String, dynamic>> mapList, {ListToCsvConverter? converter}) {
+    if (mapList == null) return '';
+    converter ??= const ListToCsvConverter();
+    
     var data = <List>[];
     var keys = <String>[];
     var keyIndexMap = <String, int>{};
@@ -225,9 +227,7 @@ class UrnaHelper {
       });
       data.add(dataRow);
     }
-    return converter.encode(<List>[]
-      ..add(keys)
-      ..addAll(data));
+    return converter.convert(<List>[]..add(keys)..addAll(data));
   }
 
   Future close() async {

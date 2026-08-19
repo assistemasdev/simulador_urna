@@ -116,7 +116,7 @@ class _DashboardState extends State<Dashboard> {
   _shareCSV() async {
     final directory = await getApplicationDocumentsDirectory();
     final file = File('${directory.path}/votos.csv');
-    return SharePlus.instance.share(ShareParams(files: [XFile(file.path)]));
+   return Share.shareXFiles([XFile(file.path)]);
   }
 
   _onClickLogout(BuildContext context) {

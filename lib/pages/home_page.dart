@@ -84,8 +84,6 @@ class _HomePageState extends State<HomePage> {
                           children: [
                             Text('FIM', style: TextStyle(fontSize: 120, fontWeight: FontWeight.bold, color: Colors.black)),
                             SizedBox(height: 20),
-                            Text('Voto computado com sucesso!', style: TextStyle(fontSize: 30, color: Colors.black)),
-                            SizedBox(height: 50),
                             ElevatedButton(
                               onPressed: () {
                                 memory.resetForNewVote(); // Limpa TUDO, inclusive endereço
@@ -171,7 +169,7 @@ class _HomePageState extends State<HomePage> {
                 Navigator.pop(ctx);
                 try {
                   final file = await relatorio.gerarCSV();
-                  await SharePlus.instance.share(ShareParams(files: [XFile(file.path)]));
+                  await Share.shareXFiles([XFile(file.path)]);  
                 } catch (e) {
                   ScaffoldMessenger.of(context).showSnackBar(
                     SnackBar(content: Text("Erro ao gerar relatório: $e")),

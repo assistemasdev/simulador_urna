@@ -117,6 +117,7 @@ class Memory {
     _currentCargoIndex = 0;
     _value = '';
     _candidatoId = [];
-    _endereco = ''; // <-- LIMPA O ENDEREÇO PARA O PRÓXIMO
+    _endereco = ''; 
+    _voteFinished = false;
   }
 }
